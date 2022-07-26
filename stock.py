@@ -1,10 +1,8 @@
-from datetime import date
 from select import select
 import pandas as pd
-import time
 from alpha_vantage.timeseries import TimeSeries
 import streamlit as st
-from statsmodels.tsa import seasonal
+from statsmodels.tsa.seasonal import seasonal_decompose
 import matplotlib.pyplot as plt
 from statsmodels.tsa.arima.model import ARIMA
 from pmdarima import auto_arima
@@ -52,7 +50,7 @@ try:
     close = assign(data['4. close'])
 
 
-    decom = seasonal.seasonal_decompose(high,model='additive')
+    decom = seasonal_decompose(high,model='additive')
     observed = decom.observed
     Trend = decom.trend
     seasonality = decom.seasonal
@@ -65,36 +63,10 @@ try:
 
     daf = pd.DataFrame(dic)
 
-    def mode(data3):
-        res = auto_arima(data3,trace=True)
-        param = res.get_params()
-        order1 = param['order']
-        p = order1[0]
-        d = order1[1]
-        q = order1[2]
 
-        model = ARIMA(data3, order=(p, d, q))
-        m_fit = model.fit()
-        pred = m_fit.forecast(10)
-        pred = pd.DataFrame(pred)
-        return pred
-
-    pred_open = mode(open_)
-    pred_high = mode(high)
-    pred_low = mode(low)
-    pred_close = mode(close)
-
-    predicted = {
-        'Open' : pred_open['predicted_mean'],
-        'High' : pred_high['predicted_mean'],
-        'Low' : pred_low['predicted_mean'],
-        'Close' : pred_close['predicted_mean']
-    }
-    df = pd.DataFrame(predicted)
     #st.write(df)
 
-    select = st.sidebar.selectbox('SELECT',('Chart','Prediction','Previous History'))
-
+    select = st.sidebar.selectbox('SELECT',('Select','Chart','Prediction','Previous History'))
     if (select == 'Chart'):
         st.subheader('Company Chart')
         high1 = pd.DataFrame(data1['2. high'])
@@ -106,11 +78,55 @@ try:
 
         st.subheader('Observed , Trend , Seasonality')
         st.line_chart(daf)
-          
-    elif(select == 'Prediction'):
+
+    elif(select == 'Previous History'):
+        date_1 = None
+        st.subheader('Enter the Date to search')
+        date_1= st.text_input('Enter the Date in YYYY-MM-DD Format')
+        date_1= date_1+'T00:00:00'
+        if(date_1):
+            try:
+                res = data1.loc[date_1]
+                st.write(res)
+
+            except:
+                st.write("**This is Not A business Date Please Re-enter**")
+
+    elif(select=='Select'):
+        pass
+
+    else:
         date_ = None
+        def mode(data3):
+            res = auto_arima(data3,trace=True)
+            param = res.get_params()
+            order1 = param['order']
+            p = order1[0]
+            d = order1[1]
+            q = order1[2]
+
+            model = ARIMA(data3, order=(p, d, q))
+            m_fit = model.fit()
+            pred = m_fit.forecast(10)
+            pred = pd.DataFrame(pred)
+            return pred
+
+        pred_open = mode(open_)
+        pred_high = mode(high)
+        pred_low = mode(low)
+        pred_close = mode(close)
+
+        predicted = {
+            'Open' : pred_open['predicted_mean'],
+            'High' : pred_high['predicted_mean'],
+            'Low' : pred_low['predicted_mean'],
+            'Close' : pred_close['predicted_mean']
+        }
+        df = pd.DataFrame(predicted)
+        
         st.subheader('Enter the Date {should be less than 10 days far}')
         date_ = st.text_input('Enter the Date in YYYY-MM-DD Format')
+        date_= date_+'T00:00:00'
         if(date_):
             try:
                 predi = df.loc[date_]
@@ -119,20 +135,7 @@ try:
             except:
                 st.write("**This is Not A business Date Please Re-enter**")
 
-
-    elif(select == 'Previous History'):
-        date1 = None
-        st.subheader('Enter the Date to search')
-        date1 = st.text_input('Enter the Date in YYYY-MM-DD Format')
-        if(date1):
-            try:
-                res = data1.loc[date1]
-                st.write(res)
-
-            except:
-                st.write("**This is Not A business Date Please Re-enter**")
-
-    
 except:
     if sym:
         st.error("** Something went Wrong Please Try Again **")
+
