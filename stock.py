@@ -4,7 +4,7 @@ import pandas as pd
 import time
 from alpha_vantage.timeseries import TimeSeries
 import streamlit as st
-from statsmodels.tsa.seasonal import seasonal_decompose
+from statsmodels.tsa import seasonal
 import matplotlib.pyplot as plt
 from statsmodels.tsa.arima.model import ARIMA
 from pmdarima import auto_arima
@@ -52,7 +52,7 @@ try:
     close = assign(data['4. close'])
 
 
-    decom = seasonal_decompose(high,model='additive')
+    decom = seasonal.seasonal_decompose(high,model='additive')
     observed = decom.observed
     Trend = decom.trend
     seasonality = decom.seasonal
