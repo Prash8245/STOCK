@@ -119,7 +119,8 @@ try:
             except:
                 st.write("**This is Not A business Date Please Re-enter**")
 
-    else:
+    elif(select == 'Prediction'):
+        date_ = None
         st.subheader('Enter the Date {should be less than 10 days far}')
         date_ = st.text_input('Enter the Date in YYYY-MM-DD Format')
         if(date_):
