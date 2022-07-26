@@ -108,9 +108,10 @@ try:
         st.line_chart(daf)
 
     elif(select == 'Previous History'):
+        date1 = None
         st.subheader('Enter the Date to search')
-        date_ = st.text_input('Enter the Date in YYYY-MM-DD Format')
-        if(date_):
+        date1 = st.text_input('Enter the Date in YYYY-MM-DD Format')
+        if(date1):
             try:
                 res = data1.loc[date_]
                 st.write(res)
