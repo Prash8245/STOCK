@@ -95,38 +95,39 @@ try:
 
     select = st.sidebar.radio('SELECT',('Chart','Prediction','Previous History'))
 
-    if (select == 'Chart'):
-        st.subheader('Company Chart')
-        high1 = pd.DataFrame(data1['2. high'])
-        st.line_chart(high1)
+    while(select):
+        if (select == 'Chart'):
+            st.subheader('Company Chart')
+            high1 = pd.DataFrame(data1['2. high'])
+            st.line_chart(high1)
 
-        high2 = pd.DataFrame(data)
-        st.line_chart(high2)
+            high2 = pd.DataFrame(data)
+            st.line_chart(high2)
 
-        st.subheader('Observed , Trend , Seasonality')
-        st.line_chart(daf)
+            st.subheader('Observed , Trend , Seasonality')
+            st.line_chart(daf)
 
-    elif(select == 'Previous History'):
-        st.subheader('Enter the Date to search')
-        date_ = st.text_input('Enter the Date in YYYY-MM-DD Format')
-        if(date_):
-            try:
-                res = data1.loc[date_]
-                st.write(res)
+        elif(select == 'Previous History'):
+            st.subheader('Enter the Date to search')
+            date_ = st.text_input('Enter the Date in YYYY-MM-DD Format')
+            if(date_):
+                try:
+                    res = data1.loc[date_]
+                    st.write(res)
 
-            except:
-                st.write("**This is Not A business Date Please Re-enter**")
+                except:
+                    st.write("**This is Not A business Date Please Re-enter**")
 
-    else:
-        st.subheader('Enter the Date {should be less than 10 days far}')
-        date_ = st.text_input('Enter the Date in YYYY-MM-DD Format')
-        if(date_):
-            try:
-                predi = df.loc[date_]
-                st.write(predi)
+        else:
+            st.subheader('Enter the Date {should be less than 10 days far}')
+            date_ = st.text_input('Enter the Date in YYYY-MM-DD Format')
+            if(date_):
+                try:
+                    predi = df.loc[date_]
+                    st.write(predi)
 
-            except:
-                st.write("**This is Not A business Date Please Re-enter**")
+                except:
+                    st.write("**This is Not A business Date Please Re-enter**")
 
 except:
     if sym:
