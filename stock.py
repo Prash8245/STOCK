@@ -93,7 +93,7 @@ try:
     df = pd.DataFrame(predicted)
     #st.write(df)
 
-    select = st.sidebar.radio('SELECT',('Chart','Prediction','Previous History'))
+    select = st.sidebar.selectbox('SELECT',('Chart','Prediction','Previous History'))
 
     if (select == 'Chart'):
         st.subheader('Company Chart')
@@ -106,6 +106,19 @@ try:
 
         st.subheader('Observed , Trend , Seasonality')
         st.line_chart(daf)
+          
+    elif(select == 'Prediction'):
+        date_ = None
+        st.subheader('Enter the Date {should be less than 10 days far}')
+        date_ = st.text_input('Enter the Date in YYYY-MM-DD Format')
+        if(date_):
+            try:
+                predi = df.loc[date_]
+                st.write(predi)
+
+            except:
+                st.write("**This is Not A business Date Please Re-enter**")
+
 
     elif(select == 'Previous History'):
         date1 = None
@@ -119,19 +132,7 @@ try:
             except:
                 st.write("**This is Not A business Date Please Re-enter**")
 
-    elif(select == 'Prediction'):
-        date_ = None
-        st.subheader('Enter the Date {should be less than 10 days far}')
-        date_ = st.text_input('Enter the Date in YYYY-MM-DD Format')
-        if(date_):
-            try:
-                predi = df.loc[date_]
-                st.write(predi)
-
-            except:
-                st.write("**This is Not A business Date Please Re-enter**")
-
+    
 except:
     if sym:
         st.error("** Something went Wrong Please Try Again **")
-
