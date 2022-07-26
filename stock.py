@@ -113,7 +113,7 @@ try:
         date1 = st.text_input('Enter the Date in YYYY-MM-DD Format')
         if(date1):
             try:
-                res = data1.loc[date_]
+                res = data1.loc[date1]
                 st.write(res)
 
             except:
