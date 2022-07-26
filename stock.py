@@ -6,7 +6,7 @@ from alpha_vantage.timeseries import TimeSeries
 import streamlit as st
 from statsmodels.tsa import seasonal
 import matplotlib.pyplot as plt
-from statsmodels.tsa.arima_model import ARIMA
+from statsmodels.tsa.arima.model import ARIMA
 from pmdarima import auto_arima
 
 st.set_page_config(
